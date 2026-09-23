@@ -7,10 +7,8 @@ function App() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
-  async function handleSearch(event) {
-    event.preventDefault();
-
-    const trimmedQuery = query.trim();
+  async function searchRepositories(searchQuery = query) {
+    const trimmedQuery = searchQuery.trim();
 
     if (!trimmedQuery) {
       setRepositories([]);
@@ -42,6 +40,11 @@ function App() {
       setError(err.message || "Something went wrong.");
       setStatus("error");
     }
+  }
+
+  function handleSearch(event) {
+    event.preventDefault();
+    searchRepositories();
   }
 
   return (
@@ -77,10 +80,10 @@ function App() {
 
         <section
           className="results-section"
-          aria-live="polite"
+          aria-labelledby="results-heading"
           aria-busy={status === "loading"}
         >
-          <h2>Search results</h2>
+          <h2 id="results-heading">Search results</h2>
 
           {status === "idle" && (
             <p className="empty-state">
@@ -89,16 +92,29 @@ function App() {
           )}
 
           {status === "loading" && (
-            <p className="loading-state">
-              Searching GitHub repositories...
-            </p>
+            <div className="loading-state" role="status">
+              <strong>Searching GitHub repositories...</strong>
+              <p>Please wait while we fetch the results.</p>
+            </div>
           )}
 
           {status === "error" && (
             <div className="error-state" role="alert">
               <strong>Search failed</strong>
+
               <p>{error}</p>
-              <p>Please check your connection and try again.</p>
+
+              <p>
+                Please check your connection and try again.
+              </p>
+
+              <button
+                className="retry-button"
+                type="button"
+                onClick={() => searchRepositories()}
+              >
+                Try again
+              </button>
             </div>
           )}
 
@@ -109,43 +125,53 @@ function App() {
           )}
 
           {status === "success" && repositories.length > 0 && (
-            <div className="results-list">
-              {repositories.map((repository) => (
-                <article className="repository-card" key={repository.id}>
-                  <h3>
-                    <a
-                      href={repository.html_url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {repository.full_name}
-                    </a>
-                  </h3>
+            <>
+              <p className="results-count" role="status">
+                {repositories.length} repositories found.
+              </p>
 
-                  <p className="repository-description">
-                    {repository.description ||
-                      "No description provided."}
-                  </p>
+              <div className="results-list">
+                {repositories.map((repository) => (
+                  <article
+                    className="repository-card"
+                    key={repository.id}
+                  >
+                    <h3>
+                      <a
+                        href={repository.html_url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {repository.full_name}
+                      </a>
+                    </h3>
 
-                  <div className="repository-meta">
-                    <span>
-                      ★ {repository.stargazers_count.toLocaleString()}
-                    </span>
+                    <p className="repository-description">
+                      {repository.description ||
+                        "No description provided."}
+                    </p>
 
-                    {repository.language && (
-                      <span>{repository.language}</span>
-                    )}
+                    <div className="repository-meta">
+                      <span>
+                        ★{" "}
+                        {repository.stargazers_count.toLocaleString()}
+                      </span>
 
-                    <span>
-                      Updated{" "}
-                      {new Date(
-                        repository.updated_at
-                      ).toLocaleDateString()}
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
+                      {repository.language && (
+                        <span>{repository.language}</span>
+                      )}
+
+                      <span>
+                        Updated{" "}
+                        {new Date(
+                          repository.updated_at
+                        ).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </>
           )}
         </section>
       </section>

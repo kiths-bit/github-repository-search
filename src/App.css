@@ -1,6 +1,13 @@
 * {
   box-sizing: border-box;
 }
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 html {
   font-family: Arial, Helvetica, sans-serif;
@@ -128,7 +135,30 @@ h1 {
   border: 1px solid #cf222e;
   color: #82071e;
 }
+.retry-button {
+  margin-top: 20px;
+  padding: 10px 16px;
+  border: 1px solid #82071e;
+  border-radius: 7px;
+  background: white;
+  color: #82071e;
+  font-weight: 700;
+}
 
+.retry-button:hover {
+  background: #fff1f0;
+}
+
+.retry-button:focus-visible {
+  outline: 3px solid #0969da;
+  outline-offset: 3px;
+}
+
+.results-count {
+  margin: 0 0 16px;
+  color: #656d76;
+  font-size: 0.9rem;
+}
 .error-state p {
   margin: 8px 0 0;
 }
@@ -139,15 +169,19 @@ h1 {
 }
 
 .repository-card {
+  min-width: 0;
   padding: 20px;
   border: 1px solid #d0d7de;
   border-radius: 10px;
   background: white;
+  overflow-wrap: anywhere;
 }
 
 .repository-card h3 {
+  min-width: 0;
   margin: 0;
   font-size: 1.2rem;
+  overflow-wrap: anywhere;
 }
 
 .repository-card h3 a {
@@ -160,9 +194,11 @@ h1 {
 }
 
 .repository-description {
+  min-width: 0;
   margin: 12px 0;
   color: #656d76;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .repository-meta {
