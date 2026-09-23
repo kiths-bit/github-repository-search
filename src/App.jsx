@@ -50,13 +50,16 @@ function App() {
   return (
     <main className="app">
       <section className="search-container">
-        <p className="eyebrow">FEATURE REBUILD</p>
+        <header className="hero">
+          <p className="eyebrow">FEATURE REBUILD</p>
 
-        <h1>GitHub Repository Search</h1>
+          <h1>GitHub Repository Search</h1>
 
-        <p className="intro">
-          Search GitHub repositories and explore their basic information.
-        </p>
+          <p className="intro">
+            Search GitHub repositories and quickly explore their
+            essential information.
+          </p>
+        </header>
 
         <form className="search-form" onSubmit={handleSearch}>
           <label htmlFor="repository-search">
@@ -72,9 +75,7 @@ function App() {
               placeholder="Try: react, python, machine learning..."
             />
 
-            <button type="submit">
-              Search
-            </button>
+            <button type="submit">Search</button>
           </div>
         </form>
 
@@ -83,7 +84,15 @@ function App() {
           aria-labelledby="results-heading"
           aria-busy={status === "loading"}
         >
-          <h2 id="results-heading">Search results</h2>
+          <div className="results-header">
+            <h2 id="results-heading">Search results</h2>
+
+            {status === "success" && repositories.length > 0 && (
+              <span className="result-label">
+                {repositories.length} found
+              </span>
+            )}
+          </div>
 
           {status === "idle" && (
             <p className="empty-state">
@@ -125,55 +134,59 @@ function App() {
           )}
 
           {status === "success" && repositories.length > 0 && (
-            <>
-              <p className="results-count" role="status">
-                {repositories.length} repositories found.
-              </p>
+            <div className="results-list">
+              {repositories.map((repository) => (
+                <article
+                  className="repository-card"
+                  key={repository.id}
+                >
+                  <div className="repository-top">
+                    <span className="repository-type">
+                      Repository
+                    </span>
 
-              <div className="results-list">
-                {repositories.map((repository) => (
-                  <article
-                    className="repository-card"
-                    key={repository.id}
-                  >
-                    <h3>
-                      <a
-                        href={repository.html_url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {repository.full_name}
-                      </a>
-                    </h3>
+                    <span className="repository-language">
+                      {repository.language || "Mixed"}
+                    </span>
+                  </div>
 
-                    <p className="repository-description">
-                      {repository.description ||
-                        "No description provided."}
-                    </p>
+                  <h3>
+                    <a
+                      href={repository.html_url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {repository.full_name}
+                    </a>
+                  </h3>
 
-                    <div className="repository-meta">
-                      <span>
-                        ★{" "}
-                        {repository.stargazers_count.toLocaleString()}
-                      </span>
+                  <p className="repository-description">
+                    {repository.description ||
+                      "No description provided."}
+                  </p>
 
-                      {repository.language && (
-                        <span>{repository.language}</span>
-                      )}
+                  <div className="repository-meta">
+                    <span>
+                      ★{" "}
+                      {repository.stargazers_count.toLocaleString()}
+                    </span>
 
-                      <span>
-                        Updated{" "}
-                        {new Date(
-                          repository.updated_at
-                        ).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </>
+                    <span>
+                      Updated{" "}
+                      {new Date(
+                        repository.updated_at
+                      ).toLocaleDateString()}
+                    </span>
+                  </div>
+                </article>
+              ))}
+            </div>
           )}
         </section>
+
+        <footer className="footer">
+          A focused rebuild of GitHub's repository search feature.
+        </footer>
       </section>
     </main>
   );
